@@ -1,48 +1,24 @@
 #include <iostream>
-
-#include "SFML//System.hpp"
-#include "SFML/Graphics.hpp"
+#include "Game.h"
 
 
 using namespace std;
 
 int main()
 {
-	//Window
-	sf::RenderWindow window(sf::VideoMode(640, 480), "Snake", sf::Style::Titlebar | sf::Style::Close);
-	sf::Event ev;
+	//Init Game Engine
+
+	Game game;
 
 	//Game loop
-	while (window.isOpen())
+	while (game.isRunning())
 	{
-		//Event polling
-		while (window.pollEvent(ev))
-		{
-			switch (ev.type)
-			{
-			case sf::Event::Closed:
-				window.close();
-				break;
-			case sf::Event::KeyPressed:
-				if (ev.key.code == sf::Keyboard::Escape)
-				{
-					window.close();
-				}
-				break;
-
-			}
-		}
 
 		//Update
-
+		game.update();
 
 		//Render
-		window.clear(sf::Color::Cyan); //Clear old frame
-
-
-
-		window.display(); // Window is done drawing
-
+		game.render();
 
 	}
 
