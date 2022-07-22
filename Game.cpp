@@ -4,7 +4,7 @@
 Game::Game(int p_tiles_x, int p_tiles_y, float p_update_rate = 0.5f)
 {
 	this->map_size = sf::Vector2u(p_tiles_x, p_tiles_y);
-	this->update_rate = p_update_rate;
+	this->update_freq = p_update_rate;
 
 	this->initVariables();
 	this->initWindow();
@@ -23,6 +23,8 @@ void Game::initVariables()
 	this->snake_length = 5;
 	this->snake_body.resize(this->snake_length);
 
+	this->direction = RIGHT;
+
 	// Init Snake Head
 	this->snake_body[0] = sf::Vector2u(this->map_size.x/2, this->map_size.y/2);
 
@@ -34,7 +36,7 @@ void Game::initVariables()
 	}
 
 	// Init Clock
-	this->elapsed_time_limit = sf::seconds(1 / this->update_rate);
+	this->elapsed_time_limit = sf::seconds(1 / this->update_freq);
 }
 
 
@@ -53,7 +55,28 @@ void Game::initWindow()
 
 void Game::move()
 {
+	sf::Vector2u head_pos = sf::Vector2u(this->snake_body[0].x, this->snake_body[0].y);
 
+	switch (this->direction)
+	{
+	case LEFT:
+		head_pos.x--;
+		break;
+	case UP:
+		head_pos.y--;
+		break;
+	case DOWN:
+		head_pos.y++;
+		break;
+	case RIGHT:
+		head_pos.x++;
+		break;
+	default:
+		break;
+	}
+
+	this->snake_body.push_front(head_pos);
+	this->snake_body.pop_back();
 }
 
 
@@ -88,11 +111,32 @@ void Game::pollEvents()
 //Functions
 void Game::update()
 {
+
 	this->pollEvents();
 
-	// Update snake
+	if (this->clock.getElapsedTime() > this->elapsed_time_limit)
+	{
+		// Update snake
+		this->move();
 
-	// Update rectangles
+		std::cout << std::endl << this->clock.getElapsedTime().asMilliseconds() << std::endl << std::endl;
+
+		// Restart clock
+		this->clock.restart();
+	}
+
+	//std::cout << this->clock.getElapsedTime().asMilliseconds() << std::endl;
+
+
+}
+
+
+void Game::render()
+{
+	this->window->clear(sf::Color::Blue);
+
+
+	// Update and draw rectangles
 	this->snake_rectangles.resize(this->snake_length);
 	sf::Vector2f current_pos_window;
 
@@ -107,22 +151,11 @@ void Game::update()
 		this->snake_rectangles[i].setOutlineThickness(1);
 		this->snake_rectangles[i].setOutlineColor(sf::Color::Cyan);
 
-
+		this->window->draw(this->snake_rectangles[i]);
 	}
-}
-
-void Game::render()
-{
-	this->window->clear(sf::Color::Blue);
 
 
 	//Draw game objects
-
-	//Draw Snake
-	for (int i = 0; i < this->snake_length; i++)
-	{
-		this->window->draw(this->snake_rectangles[i]);
-	}
 	
 
 	this->window->display();
