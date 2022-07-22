@@ -18,9 +18,14 @@ private:
 	sf::VideoMode videomode;
 	sf::Event ev;
 
+	// Map
+	int** map;
+
 	// Private Functions
 	void initVariables();
+	void initMap();
 	void initWindow();
+	void debugMap();
 
 
 public:

@@ -1,11 +1,8 @@
 #include "Game.h"
 
-
-
 int main()
 {
 	//Init Game Engine
-
 	Game game;
 
 	//Game loop
@@ -17,9 +14,7 @@ int main()
 
 		//Render
 		game.render();
-
 	}
-
 
 	return 0;
 }

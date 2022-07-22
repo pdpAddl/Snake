@@ -1,9 +1,11 @@
 #include "Game.h"
+#include <iostream>
 
 Game::Game()
 {
 	this->initVariables();
 	this->initWindow();
+	this->initMap();
 }
 
 Game::~Game()
@@ -17,6 +19,26 @@ void Game::initVariables()
 	this->window = nullptr;
 }
 
+void Game::initMap()
+{
+	int x = 10;
+	int y = 10;
+
+	map = new int*[x];
+
+	for (int i = 0; i < x; i++)
+	{
+		map[i] = new int[y];
+
+		for (int j = 0; j < y; j++)
+		{
+			map[i][j] = 0;
+		}
+	}
+
+	debugMap();
+}
+
 void Game::initWindow()
 {
 	this->videomode.height = 600;
@@ -26,6 +48,19 @@ void Game::initWindow()
 
 	this->window->setFramerateLimit(144);
 
+}
+
+void Game::debugMap()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		std::cout << std::endl;
+
+		for (int j = 0; j < 10; j++)
+		{
+			std::cout << this->map[i][j];
+		}
+	}
 }
 
 const bool Game::isRunning() const
