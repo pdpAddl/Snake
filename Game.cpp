@@ -1,11 +1,12 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game()
+Game::Game(int p_tiles_x, int p_tiles_y)
 {
+	this->map_size = sf::Vector2u(p_tiles_x, p_tiles_y);
+
 	this->initVariables();
 	this->initWindow();
-	this->initMap();
 }
 
 Game::~Game()
@@ -18,33 +19,20 @@ void Game::initVariables()
 {
 	this->window = nullptr;
 
-	this->snake_head.x = 5;
-	this->snake_head.y = 5;
-	this->snake_next_part_direction.resize(this->snake_length);
+	this->snake_length = 5;
+	this->snake_body.resize(this->snake_length);
 
-}
+	// Init Snake Head
+	this->snake_body[0] = sf::Vector2u(this->map_size.x/2, this->map_size.y/2);
 
-void Game::initMap()
-{
-	this->tile_amt_x = 10;
-	this->tile_amt_y = 10;
-
-	// Init Map itself
-	map.resize(this->tile_amt_x);
-
-	for (int i = 0; i < this->tile_amt_x; i++)
+	// Init Snake Body
+	for (int i = 1; i < this->snake_length; i++)
 	{
-		map[i].resize(this->tile_amt_y);
-
-		for (int j = 0; j < tile_amt_y; j++)
-		{
-			map[i][j] = 0;
-		}
+		this->snake_body[i] = sf::Vector2u(this->snake_body[i-1].x-1, this->snake_body[i - 1].y);
+		std::cout << this->snake_body[i].x << " " << this->snake_body[i].y << std::endl;
 	}
-
-	map[snake_head.x][snake_head.y] = 1;
-
 }
+
 
 void Game::initWindow()
 {
@@ -55,25 +43,10 @@ void Game::initWindow()
 
 	this->window->setFramerateLimit(144);
 
-}
-
-void Game::debugMap()
-{
-	for (int i = 0; i < 10; i++)
-	{
-		std::cout << std::endl;
-
-		for (int j = 0; j < 10; j++)
-		{
-			std::cout << this->map[i][j];
-		}
-	}
-}
-
-void Game::generateBodyFromDirections()
-{
+	this->tile_size = sf::Vector2f(this->videomode.width / this->map_size.x, this->videomode.height / this->map_size.y);
 
 }
+
 
 const bool Game::isRunning() const
 {
@@ -107,19 +80,76 @@ void Game::pollEvents()
 void Game::update()
 {
 	this->pollEvents();
+	this->snake_rectangles.resize(this->snake_length);
+
+	sf::Vector2f current_pos_window;
+
+	for (int i = 0; i < this->snake_length - 1; i++)
+	{
+		current_pos_window = sf::Vector2f(this->snake_body[i].x * this->tile_size.x, this->snake_body[i].y * this->tile_size.y);
+
+		//std::cout << current_pos_window.x << " " << current_pos_window.y << std::endl;
+
+		this->snake_rectangles[i] = sf::RectangleShape(this->tile_size);
+		this->snake_rectangles[i].setPosition(current_pos_window);
+
+	}
 }
 
 void Game::render()
 {
-	return;
-	this->window->clear(sf::Color::Red);
+	this->window->clear(sf::Color::Blue);
 
 
 	//Draw game objects
 
+	//Draw Snake
+	for (int i = 0; i < this->snake_length - 1; i++)
+	{
+		this->window->draw(this->snake_rectangles[i]);
+	}
+	
 
 	this->window->display();
 }
 
 
 
+
+
+
+
+
+
+
+
+
+/*
+void Game::generateSnakeFromDirections()
+{
+	sf::Vector2u current_pos = this->snake_head;
+
+	for (int i = 0; i < this->snake_length-1; i++)
+	{
+		switch (this->snake_next_part_direction[i])
+		{
+		case LEFT:
+			current_pos.x -= 1;
+			break;
+		case UP:
+			current_pos.y -= 1;
+			break;
+		case DOWN:
+			current_pos.y += 1;
+			break;
+		case RIGHT:
+			current_pos.x += 1;
+			break;
+		default:
+			break;
+		}
+
+		this->map[current_pos.x][current_pos.y] = 2;
+	}
+}
+*/

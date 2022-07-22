@@ -1,5 +1,6 @@
 #pragma once
 
+#include <deque>
 #include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
 
@@ -26,25 +27,27 @@ private:
 	sf::Event ev;
 
 	// Map
-	std::vector<std::vector<int>> map;
-	int tile_amt_x, tile_amt_y;
+	sf::Vector2u map_size;
+	sf::Vector2f tile_size;
+	//std::vector<std::vector<int>> map;
 
 	// Snake
-	sf::Vector2u snake_head;
+	std::deque<sf::Vector2u> snake_body;
+	std::vector<sf::RectangleShape> snake_rectangles;
 	int snake_length;
-	std::vector<directions> snake_next_part_direction;
+	
+	
 
 	// Private Functions
 	void initVariables();
 	void initMap();
 	void initWindow();
 	void debugMap();
-	void generateBodyFromDirections();
 
 
 public:
 	//Constructors / Destructors
-	Game();
+	Game(int tiles_x, int tiles_y);
 	virtual ~Game();
 
 	//Accessors
