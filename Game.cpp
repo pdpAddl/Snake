@@ -11,18 +11,17 @@ Game::Game()
 Game::~Game()
 {
 	delete this->window;
-
-	for (int i = 0; i < this->tile_amt_x; i++)
-	{
-		delete map[i];
-	}
-	delete map;
 }
 
 
 void Game::initVariables()
 {
 	this->window = nullptr;
+
+	this->snake_head.x = 5;
+	this->snake_head.y = 5;
+	this->snake_next_part_direction.resize(this->snake_length);
+
 }
 
 void Game::initMap()
@@ -31,11 +30,11 @@ void Game::initMap()
 	this->tile_amt_y = 10;
 
 	// Init Map itself
-	map = new int*[this->tile_amt_x];
+	map.resize(this->tile_amt_x);
 
 	for (int i = 0; i < this->tile_amt_x; i++)
 	{
-		map[i] = new int[this->tile_amt_y];
+		map[i].resize(this->tile_amt_y);
 
 		for (int j = 0; j < tile_amt_y; j++)
 		{
@@ -43,7 +42,8 @@ void Game::initMap()
 		}
 	}
 
-	debugMap();
+	map[snake_head.x][snake_head.y] = 1;
+
 }
 
 void Game::initWindow()
@@ -68,6 +68,11 @@ void Game::debugMap()
 			std::cout << this->map[i][j];
 		}
 	}
+}
+
+void Game::generateBodyFromDirections()
+{
+
 }
 
 const bool Game::isRunning() const
@@ -106,6 +111,7 @@ void Game::update()
 
 void Game::render()
 {
+	return;
 	this->window->clear(sf::Color::Red);
 
 

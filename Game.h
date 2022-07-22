@@ -3,18 +3,19 @@
 #include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
 
+
+enum directions {
+	UP,
+	RIGHT,
+	DOWN,
+	LEFT
+};
+
 /*
 
 	Class that describes game logic
 
 */
-
-enum mapTiles
-{
-	EMPTY,
-	SNAKE_HEAD,
-	SNAKE_BODY
-};
 
 class Game
 {
@@ -25,14 +26,20 @@ private:
 	sf::Event ev;
 
 	// Map
-	int** map;
+	std::vector<std::vector<int>> map;
 	int tile_amt_x, tile_amt_y;
+
+	// Snake
+	sf::Vector2u snake_head;
+	int snake_length;
+	std::vector<directions> snake_next_part_direction;
 
 	// Private Functions
 	void initVariables();
 	void initMap();
 	void initWindow();
 	void debugMap();
+	void generateBodyFromDirections();
 
 
 public:
