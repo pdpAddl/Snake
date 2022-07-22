@@ -32,7 +32,7 @@ void Game::initVariables()
 	for (int i = 1; i < this->snake_length; i++)
 	{
 		this->snake_body[i] = sf::Vector2u(this->snake_body[i-1].x-1, this->snake_body[i - 1].y);
-		std::cout << this->snake_body[i].x << " " << this->snake_body[i].y << std::endl;
+		//std::cout << this->snake_body[i].x << " " << this->snake_body[i].y << std::endl;
 	}
 
 	// Init Clock
@@ -42,8 +42,8 @@ void Game::initVariables()
 
 void Game::initWindow()
 {
-	this->videomode.height = 1000;
-	this->videomode.width = 1000;
+	this->videomode.height = 800;
+	this->videomode.width = 800;
 
 	this->window = new sf::RenderWindow(this->videomode, "Snake", sf::Style::Titlebar | sf::Style::Close);
 
@@ -98,12 +98,26 @@ void Game::pollEvents()
 			break;
 
 		case sf::Event::KeyPressed:
-			if (this->ev.key.code == sf::Keyboard::Escape)
+			switch (this->ev.key.code)
 			{
+			case sf::Keyboard::Escape:
 				this->window->close();
+				break;
+			case sf::Keyboard::Up:
+				if (this->direction != DOWN) this->direction = UP;
+				break;
+			case sf::Keyboard::Left:
+				if (this->direction != RIGHT) this->direction = LEFT;
+				break;
+			case sf::Keyboard::Down:
+				if (this->direction != UP) this->direction = DOWN;
+				break;
+			case sf::Keyboard::Right:
+				if (this->direction != LEFT) this->direction = RIGHT;
+				break;
 			}
-			break;
 
+			break;
 		}
 	}
 }

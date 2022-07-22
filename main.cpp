@@ -3,7 +3,7 @@
 int main()
 {
 	//Init Game Engine
-	Game game(20, 20, 1);
+	Game game(20, 20, 5);
 	sf::Clock clock;
 
 	//Game loop
