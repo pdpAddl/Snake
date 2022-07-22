@@ -1,5 +1,22 @@
 #include "Game.h"
 
+Game::Game(int pTileAmountX, int pTileAmountY)
+{
+	this->tileAmountOnMapX = pTileAmountX;
+	this->tileAmountOnMapY = pTileAmountY;
+
+	this->initVariables();
+	this->initWindow();
+	this->initMap();
+	this->initSnake();
+}
+
+Game::~Game()
+{
+	delete this->window;
+}
+
+
 void Game::initVariables()
 {
 	this->window = nullptr;
@@ -10,19 +27,39 @@ void Game::initWindow()
 	this->videomode.height = 600;
 	this->videomode.width = 800;
 
-	this->window = new 	sf::RenderWindow(this->videomode, "Snake", sf::Style::Titlebar | sf::Style::Close);
+	this->window = new sf::RenderWindow(this->videomode, "Snake", sf::Style::Titlebar | sf::Style::Close);
+
+	this->window->setFramerateLimit(144);
 
 }
 
-Game::Game()
+void Game::initMap()
 {
-	this->initVariables();
-	this->initWindow();
+	sf::Vector2u windowSize = this->window->getSize();
+
+	tileSizeX = windowSize.x / this->tileAmountOnMapX;
+	tileSizeY = windowSize.y / this->tileAmountOnMapY;
+
+	/*
+	this->enemy.setPosition(100, 100);
+	this->enemy.setSize(sf::Vector2f(100.f, 100.f));
+	this->enemy.setFillColor(sf::Color::Cyan);
+	this->enemy.setOutlineColor(sf::Color::Green);
+	this->enemy.setOutlineThickness(10.f);
+	*/
 }
 
-Game::~Game()
+void Game::initSnake()
 {
-	delete this->window;
+	int startLength = 5;
+	this->maxSnakeLength = this->tileAmountOnMapX * this->tileAmountOnMapY;
+
+	sf::Vector2u snakebody[5][5];
+
+	//this->body = 
+
+
+	
 }
 
 const bool Game::isRunning() const
@@ -37,9 +74,11 @@ void Game::pollEvents()
 	{
 		switch (this->ev.type)
 		{
+
 		case sf::Event::Closed:
 			this->window->close();
 			break;
+
 		case sf::Event::KeyPressed:
 			if (this->ev.key.code == sf::Keyboard::Escape)
 			{
@@ -59,14 +98,18 @@ void Game::update()
 
 void Game::render()
 {
-	/*
-		- clear old frame
-		- render objects
-		- display frame in window
-
-		Render ingame objects
-	*/
 	this->window->clear(sf::Color::Red);
+
+
+	//Draw game objects
+	//this->window->draw(this->enemy);
+
 
 	this->window->display();
 }
+
+void Game::setTilePosition(int tileX, int tileY)
+{
+}
+
+

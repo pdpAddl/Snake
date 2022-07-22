@@ -1,14 +1,12 @@
-#include <iostream>
 #include "Game.h"
 
 
-using namespace std;
 
 int main()
 {
 	//Init Game Engine
 
-	Game game;
+	Game game(10, 10);
 
 	//Game loop
 	while (game.isRunning())
