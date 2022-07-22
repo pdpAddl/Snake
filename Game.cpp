@@ -133,14 +133,9 @@ void Game::update()
 		// Update snake
 		this->move();
 
-		std::cout << std::endl << this->clock.getElapsedTime().asMilliseconds() << std::endl << std::endl;
-
 		// Restart clock
 		this->clock.restart();
 	}
-
-	//std::cout << this->clock.getElapsedTime().asMilliseconds() << std::endl;
-
 
 }
 
@@ -167,51 +162,7 @@ void Game::render()
 
 		this->window->draw(this->snake_rectangles[i]);
 	}
-
-
-	//Draw game objects
 	
 
 	this->window->display();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void Game::generateSnakeFromDirections()
-{
-	sf::Vector2u current_pos = this->snake_head;
-
-	for (int i = 0; i < this->snake_length-1; i++)
-	{
-		switch (this->snake_next_part_direction[i])
-		{
-		case LEFT:
-			current_pos.x -= 1;
-			break;
-		case UP:
-			current_pos.y -= 1;
-			break;
-		case DOWN:
-			current_pos.y += 1;
-			break;
-		case RIGHT:
-			current_pos.x += 1;
-			break;
-		default:
-			break;
-		}
-
-		this->map[current_pos.x][current_pos.y] = 2;
-	}
-}
-*/
