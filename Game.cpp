@@ -1,14 +1,9 @@
 #include "Game.h"
 
-Game::Game(int pTileAmountX, int pTileAmountY)
+Game::Game()
 {
-	this->tileAmountOnMapX = pTileAmountX;
-	this->tileAmountOnMapY = pTileAmountY;
-
 	this->initVariables();
 	this->initWindow();
-	this->initMap();
-	this->initSnake();
 }
 
 Game::~Game()
@@ -31,35 +26,6 @@ void Game::initWindow()
 
 	this->window->setFramerateLimit(144);
 
-}
-
-void Game::initMap()
-{
-	sf::Vector2u windowSize = this->window->getSize();
-
-	tileSizeX = windowSize.x / this->tileAmountOnMapX;
-	tileSizeY = windowSize.y / this->tileAmountOnMapY;
-
-	/*
-	this->enemy.setPosition(100, 100);
-	this->enemy.setSize(sf::Vector2f(100.f, 100.f));
-	this->enemy.setFillColor(sf::Color::Cyan);
-	this->enemy.setOutlineColor(sf::Color::Green);
-	this->enemy.setOutlineThickness(10.f);
-	*/
-}
-
-void Game::initSnake()
-{
-	int startLength = 5;
-	this->maxSnakeLength = this->tileAmountOnMapX * this->tileAmountOnMapY;
-
-	sf::Vector2u snakebody[5][5];
-
-	//this->body = 
-
-
-	
 }
 
 const bool Game::isRunning() const
@@ -102,14 +68,10 @@ void Game::render()
 
 
 	//Draw game objects
-	//this->window->draw(this->enemy);
 
 
 	this->window->display();
 }
 
-void Game::setTilePosition(int tileX, int tileY)
-{
-}
 
 

@@ -6,7 +6,7 @@ int main()
 {
 	//Init Game Engine
 
-	Game game(10, 10);
+	Game game;
 
 	//Game loop
 	while (game.isRunning())

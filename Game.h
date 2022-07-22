@@ -9,14 +9,6 @@
 
 */
 
-enum mapTiles
-{
-	NOTHING,
-	HEAD,
-	BODY,
-	WALL,
-	FOOD
-};
 
 class Game
 {
@@ -26,26 +18,14 @@ private:
 	sf::VideoMode videomode;
 	sf::Event ev;
 
-	// Game Objects Attributes
-	int tileSizeX, tileSizeY;
-	int tileAmountOnMapX, tileAmountOnMapY;
-	int snakeLength, maxSnakeLength;
-
-	// Game Objects
-	sf::RectangleShape head;
-	sf::RectangleShape* body;
-
 	// Private Functions
 	void initVariables();
 	void initWindow();
-	void initMap();
-	void initSnake();
-
 
 
 public:
 	//Constructors / Destructors
-	Game(int tileAmountX, int tileAmountY);
+	Game();
 	virtual ~Game();
 
 	//Accessors
@@ -55,7 +35,5 @@ public:
 	void pollEvents();
 	void update();
 	void render();
-
-	void setTilePosition(int tileX, int tileY);
 
 };
