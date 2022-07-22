@@ -35,19 +35,25 @@ private:
 	std::deque<sf::Vector2u> snake_body;
 	std::vector<sf::RectangleShape> snake_rectangles;
 	int snake_length;
+	directions direction;
+
+	// Clock
+	sf::Clock clock;
+	sf::Time elapsed_time, elapsed_time_limit;
+	float update_rate;
+
 	
 	
 
 	// Private Functions
 	void initVariables();
-	void initMap();
 	void initWindow();
-	void debugMap();
+	void move();
 
 
 public:
 	//Constructors / Destructors
-	Game(int tiles_x, int tiles_y);
+	Game(int tiles_x, int tiles_y, float update_rate);
 	virtual ~Game();
 
 	//Accessors

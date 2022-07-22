@@ -1,9 +1,10 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game(int p_tiles_x, int p_tiles_y)
+Game::Game(int p_tiles_x, int p_tiles_y, float p_update_rate = 0.5f)
 {
 	this->map_size = sf::Vector2u(p_tiles_x, p_tiles_y);
+	this->update_rate = p_update_rate;
 
 	this->initVariables();
 	this->initWindow();
@@ -31,6 +32,9 @@ void Game::initVariables()
 		this->snake_body[i] = sf::Vector2u(this->snake_body[i-1].x-1, this->snake_body[i - 1].y);
 		std::cout << this->snake_body[i].x << " " << this->snake_body[i].y << std::endl;
 	}
+
+	// Init Clock
+	this->elapsed_time_limit = sf::seconds(1 / this->update_rate);
 }
 
 
@@ -44,6 +48,11 @@ void Game::initWindow()
 	this->window->setFramerateLimit(144);
 
 	this->tile_size = sf::Vector2f(this->videomode.width / this->map_size.x, this->videomode.height / this->map_size.y);
+
+}
+
+void Game::move()
+{
 
 }
 
