@@ -11,6 +11,12 @@ Game::Game()
 Game::~Game()
 {
 	delete this->window;
+
+	for (int i = 0; i < this->tile_amt_x; i++)
+	{
+		delete map[i];
+	}
+	delete map;
 }
 
 
@@ -21,16 +27,17 @@ void Game::initVariables()
 
 void Game::initMap()
 {
-	int x = 10;
-	int y = 10;
+	this->tile_amt_x = 10;
+	this->tile_amt_y = 10;
 
-	map = new int*[x];
+	// Init Map itself
+	map = new int*[this->tile_amt_x];
 
-	for (int i = 0; i < x; i++)
+	for (int i = 0; i < this->tile_amt_x; i++)
 	{
-		map[i] = new int[y];
+		map[i] = new int[this->tile_amt_y];
 
-		for (int j = 0; j < y; j++)
+		for (int j = 0; j < tile_amt_y; j++)
 		{
 			map[i][j] = 0;
 		}

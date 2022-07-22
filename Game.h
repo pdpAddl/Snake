@@ -9,6 +9,12 @@
 
 */
 
+enum mapTiles
+{
+	EMPTY,
+	SNAKE_HEAD,
+	SNAKE_BODY
+};
 
 class Game
 {
@@ -20,6 +26,7 @@ private:
 
 	// Map
 	int** map;
+	int tile_amt_x, tile_amt_y;
 
 	// Private Functions
 	void initVariables();
