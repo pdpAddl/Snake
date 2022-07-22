@@ -3,7 +3,7 @@
 int main()
 {
 	//Init Game Engine
-	Game game(100, 100);
+	Game game(20, 20);
 
 	//Game loop
 	while (game.isRunning())

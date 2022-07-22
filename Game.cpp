@@ -36,8 +36,8 @@ void Game::initVariables()
 
 void Game::initWindow()
 {
-	this->videomode.height = 600;
-	this->videomode.width = 800;
+	this->videomode.height = 1000;
+	this->videomode.width = 1000;
 
 	this->window = new sf::RenderWindow(this->videomode, "Snake", sf::Style::Titlebar | sf::Style::Close);
 
@@ -80,18 +80,24 @@ void Game::pollEvents()
 void Game::update()
 {
 	this->pollEvents();
-	this->snake_rectangles.resize(this->snake_length);
 
+	// Update snake
+
+	// Update rectangles
+	this->snake_rectangles.resize(this->snake_length);
 	sf::Vector2f current_pos_window;
 
-	for (int i = 0; i < this->snake_length - 1; i++)
+	for (int i = 0; i < this->snake_length; i++)
 	{
 		current_pos_window = sf::Vector2f(this->snake_body[i].x * this->tile_size.x, this->snake_body[i].y * this->tile_size.y);
 
 		//std::cout << current_pos_window.x << " " << current_pos_window.y << std::endl;
 
-		this->snake_rectangles[i] = sf::RectangleShape(this->tile_size);
+		this->snake_rectangles[i].setSize(this->tile_size);
 		this->snake_rectangles[i].setPosition(current_pos_window);
+		this->snake_rectangles[i].setOutlineThickness(1);
+		this->snake_rectangles[i].setOutlineColor(sf::Color::Cyan);
+
 
 	}
 }
@@ -104,7 +110,7 @@ void Game::render()
 	//Draw game objects
 
 	//Draw Snake
-	for (int i = 0; i < this->snake_length - 1; i++)
+	for (int i = 0; i < this->snake_length; i++)
 	{
 		this->window->draw(this->snake_rectangles[i]);
 	}
