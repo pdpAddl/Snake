@@ -1,8 +1,11 @@
 #pragma once
 
 #include <deque>
+#include <stdlib.h>
+
 #include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
+
 
 
 enum directions {
@@ -37,6 +40,10 @@ private:
 	int snake_length;
 	directions direction;
 
+	// Food
+	sf::Vector2i food_pos;
+	sf::RectangleShape food_rectangle;
+
 	// Clock
 	sf::Clock clock;
 	sf::Time elapsed_time, elapsed_time_limit;
@@ -49,6 +56,8 @@ private:
 	void initVariables();
 	void initWindow();
 	void move();
+	void spawnFood();
+	sf::Vector2f convertToWindowPos(sf::Vector2i tile_pos);
 
 
 public:

@@ -75,6 +75,8 @@ void Game::move()
 		break;
 	}
 
+
+
 	// Collision detection
 
 	// Collision with itself
@@ -89,8 +91,41 @@ void Game::move()
 		std::cout << "COLLISION with wall!" << std::endl;
 	}
 
+	// Collsision with food
+	if (head_pos == this->food_pos)
+	{
+		std::cout << "EAT!" << std::endl;
+		this->snake_length++;
+		this->spawnFood();
+	}
+	else
+	{
+		this->snake_body.pop_back();
+	}
+
+
 	this->snake_body.push_front(head_pos);
-	this->snake_body.pop_back();
+	
+}
+
+void Game::spawnFood()
+{
+	int rand_x, rand_y;
+	sf::Vector2i food_pos_tmp;
+	do
+	{
+		rand_x = std::rand() % this->map_size.x;
+		rand_y = std::rand() % this->map_size.y;
+		food_pos_tmp = sf::Vector2i(rand_x, rand_y);
+
+	} while (std::find(this->snake_body.begin(), this->snake_body.end(), food_pos_tmp) != this->snake_body.end());
+	
+	this->food_pos = food_pos_tmp;
+}
+
+sf::Vector2f Game::convertToWindowPos(sf::Vector2i tile_pos)
+{
+	return sf::Vector2f(tile_pos.x * this->tile_size.x, tile_pos.y * this->tile_size.y);
 }
 
 
@@ -159,13 +194,13 @@ void Game::render()
 	this->window->clear(sf::Color::Blue);
 
 
-	// Update and draw rectangles
+	// Draw snake
 	this->snake_rectangles.resize(this->snake_length);
 	sf::Vector2f current_pos_window;
 
 	for (int i = 0; i < this->snake_length; i++)
 	{
-		current_pos_window = sf::Vector2f(this->snake_body[i].x * this->tile_size.x, this->snake_body[i].y * this->tile_size.y);
+		current_pos_window = this->convertToWindowPos(this->snake_body[i]);
 
 		//std::cout << current_pos_window.x << " " << current_pos_window.y << std::endl;
 
@@ -176,7 +211,13 @@ void Game::render()
 
 		this->window->draw(this->snake_rectangles[i]);
 	}
-	
+
+	// Draw food
+	this->food_rectangle.setSize(this->tile_size);
+	this->food_rectangle.setPosition(this->convertToWindowPos(this->food_pos));
+	this->food_rectangle.setFillColor(sf::Color::Red);
+
+	this->window->draw(this->food_rectangle);
 
 	this->window->display();
 }
