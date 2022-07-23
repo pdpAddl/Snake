@@ -27,12 +27,12 @@ private:
 	sf::Event ev;
 
 	// Map
-	sf::Vector2u map_size;
+	sf::Vector2i map_size;
 	sf::Vector2f tile_size;
 	//std::vector<std::vector<int>> map;
 
 	// Snake
-	std::deque<sf::Vector2u> snake_body;
+	std::deque<sf::Vector2i> snake_body;
 	std::vector<sf::RectangleShape> snake_rectangles;
 	int snake_length;
 	directions direction;

@@ -3,7 +3,7 @@
 
 Game::Game(int p_tiles_x, int p_tiles_y, float p_update_rate = 0.5f)
 {
-	this->map_size = sf::Vector2u(p_tiles_x, p_tiles_y);
+	this->map_size = sf::Vector2i(p_tiles_x, p_tiles_y);
 	this->update_freq = p_update_rate;
 
 	this->initVariables();
@@ -26,12 +26,12 @@ void Game::initVariables()
 	this->direction = RIGHT;
 
 	// Init Snake Head
-	this->snake_body[0] = sf::Vector2u(this->map_size.x/2, this->map_size.y/2);
+	this->snake_body[0] = sf::Vector2i(this->map_size.x/2, this->map_size.y/2);
 
 	// Init Snake Body
 	for (int i = 1; i < this->snake_length; i++)
 	{
-		this->snake_body[i] = sf::Vector2u(this->snake_body[i-1].x-1, this->snake_body[i - 1].y);
+		this->snake_body[i] = sf::Vector2i(this->snake_body[i-1].x-1, this->snake_body[i - 1].y);
 		//std::cout << this->snake_body[i].x << " " << this->snake_body[i].y << std::endl;
 	}
 
@@ -55,7 +55,7 @@ void Game::initWindow()
 
 void Game::move()
 {
-	sf::Vector2u head_pos = sf::Vector2u(this->snake_body[0].x, this->snake_body[0].y);
+	sf::Vector2i head_pos = sf::Vector2i(this->snake_body[0].x, this->snake_body[0].y);
 
 	switch (this->direction)
 	{
@@ -73,6 +73,20 @@ void Game::move()
 		break;
 	default:
 		break;
+	}
+
+	// Collision detection
+
+	// Collision with itself
+	if (std::find(this->snake_body.begin(), this->snake_body.end(), head_pos) != this->snake_body.end())
+	{
+		std::cout << "COLLISION!" << std::endl;
+	}
+
+	// Collsision with border window
+	if ((head_pos.x >= this->map_size.x) || (head_pos.x < 0) || (head_pos.y >= this->map_size.y) || (head_pos.y < 0))
+	{
+		std::cout << "COLLISION with wall!" << std::endl;
 	}
 
 	this->snake_body.push_front(head_pos);
