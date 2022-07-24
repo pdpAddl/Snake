@@ -5,7 +5,7 @@ int main()
 	int p = 20;
 
 	//Init Game Engine
-	Game game(p, p, 1);
+	Game_GUI game(p, p, 1);
 	sf::Clock clock;
 
 	//Game loop

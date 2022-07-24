@@ -1,25 +1,18 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game(int p_tiles_x, int p_tiles_y, float p_speed)
+Game::Game(int p_tiles_x, int p_tiles_y)
 {
 	this->map_size = sf::Vector2i(p_tiles_x, p_tiles_y);
-	this->speed = p_speed;
-
 	this->initVariables();
-	this->initWindow();
 }
 
 Game::~Game()
 {
-	delete this->window;
 }
-
 
 void Game::initVariables()
 {
-	this->window = nullptr;
-
 	this->game_state = RUNNING;
 
 	this->snake_length_start = 5;
@@ -27,37 +20,20 @@ void Game::initVariables()
 	this->snake_body.resize(this->snake_length);
 	this->direction = RIGHT;
 
-	this->update_freq = this->speed * (this->map_size.x + this->map_size.y) / 4;
+
 
 	// Init Snake Head
-	this->snake_body[0] = sf::Vector2i(this->map_size.x/2, this->map_size.y/2);
+	this->snake_body[0] = sf::Vector2i(this->map_size.x / 2, this->map_size.y / 2);
 
 	// Init Snake Body
 	for (int i = 1; i < this->snake_length; i++)
 	{
-		this->snake_body[i] = sf::Vector2i(this->snake_body[i-1].x-1, this->snake_body[i - 1].y);
+		this->snake_body[i] = sf::Vector2i(this->snake_body[i - 1].x - 1, this->snake_body[i - 1].y);
 		//std::cout << this->snake_body[i].x << " " << this->snake_body[i].y << std::endl;
 	}
 
-	// Init Clock
-	this->elapsed_time_limit = sf::seconds(1 / this->update_freq);
-
 	// Init Food
 	this->spawnFood();
-}
-
-
-void Game::initWindow()
-{
-	this->videomode.height = 800;
-	this->videomode.width = 800;
-
-	this->window = new sf::RenderWindow(this->videomode, "Snake", sf::Style::Titlebar | sf::Style::Close);
-
-	this->window->setFramerateLimit(144);
-
-	this->tile_size = sf::Vector2f(this->videomode.width / this->map_size.x, this->videomode.height / this->map_size.y);
-
 }
 
 void Game::move()
@@ -140,10 +116,6 @@ sf::Vector2f Game::convertToWindowPos(sf::Vector2i tile_pos)
 
 const bool Game::isRunning() 
 {
-	if (!this->window->isOpen())
-	{
-		this->game_state = ENDED;
-	}
 
 	switch (this->game_state)
 	{
@@ -168,7 +140,63 @@ const int Game::getScore()
 	return score;
 }
 
-void Game::pollEvents()
+
+//Functions
+void Game::update()
+{
+	// Update snake
+	this->move();
+
+}
+
+//***********************************************************************************************************************
+
+Game_GUI::Game_GUI(int p_tiles_x, int p_tiles_y, float p_speed)
+	:Game(p_tiles_x, p_tiles_y)
+{
+	this->speed = p_speed;
+	this->initWindow();
+}
+
+Game_GUI::~Game_GUI()
+{
+	delete this->window;
+}
+
+void Game_GUI::initWindow()
+{
+	this->videomode.height = 800;
+	this->videomode.width = 800;
+
+	this->window = new sf::RenderWindow(this->videomode, "Snake", sf::Style::Titlebar | sf::Style::Close);
+	this->window->setFramerateLimit(144);
+
+	this->tile_size = sf::Vector2f(this->videomode.width / this->map_size.x, this->videomode.height / this->map_size.y);
+	
+	// Init Clock
+	this->update_freq = this->speed * (this->map_size.x + this->map_size.y) / 4;
+	this->elapsed_time_limit = sf::seconds(1 / this->update_freq);
+
+}
+
+
+void Game_GUI::update()
+{
+
+	this->pollEvents();
+
+	if (this->clock.getElapsedTime() > this->elapsed_time_limit)
+	{
+		// Update snake
+		this->move();
+
+		// Restart clock
+		this->clock.restart();
+	}
+
+}
+
+void Game_GUI::pollEvents()
 {
 	//Event polling
 	while (this->window->pollEvent(ev))
@@ -205,25 +233,8 @@ void Game::pollEvents()
 	}
 }
 
-//Functions
-void Game::update()
-{
 
-	this->pollEvents();
-
-	if (this->clock.getElapsedTime() > this->elapsed_time_limit)
-	{
-		// Update snake
-		this->move();
-
-		// Restart clock
-		this->clock.restart();
-	}
-
-}
-
-
-void Game::render()
+void Game_GUI::render()
 {
 	this->window->clear(sf::Color::Blue);
 

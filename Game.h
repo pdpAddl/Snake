@@ -20,6 +20,11 @@ enum game_states {
 	ENDED
 };
 
+enum modes {
+	SIMULATION,
+	MANUAL
+};
+
 /*
 
 	Class that describes game logic
@@ -28,14 +33,11 @@ enum game_states {
 
 class Game
 {
-private:
-	// Window
-	sf::RenderWindow* window;
-	sf::VideoMode videomode;
-	sf::Event ev;
+protected:
 
 	// Game
 	game_states game_state;
+	modes mode;
 
 	// Map
 	sf::Vector2i map_size;
@@ -52,17 +54,11 @@ private:
 	sf::Vector2i food_pos;
 	sf::RectangleShape food_rectangle;
 
-	// Clock
-	sf::Clock clock;
-	sf::Time elapsed_time, elapsed_time_limit;
-	float speed, update_freq;
-
 	
 	
 
 	// Private Functions
 	void initVariables();
-	void initWindow();
 	void move();
 	void spawnFood();
 	sf::Vector2f convertToWindowPos(sf::Vector2i tile_pos);
@@ -70,7 +66,7 @@ private:
 
 public:
 	//Constructors / Destructors
-	Game(int tiles_x, int tiles_y, float speed);
+	Game(int tiles_x, int tiles_y);
 	virtual ~Game();
 
 	//Accessors
@@ -78,9 +74,57 @@ public:
 	const int getScore();
 
 	//Functions
+	virtual void update();
+};
+
+class Game_GUI : public Game
+{
+private:
+
+	// Window
+	sf::RenderWindow* window;
+	sf::VideoMode videomode;
+	sf::Event ev;
+
+	// Clock
+	sf::Clock clock;
+	sf::Time elapsed_time, elapsed_time_limit;
+	float speed, update_freq;
+
+	// Functions
+	void initWindow();
+
+public:
+	Game_GUI(int tiles_x, int tiles_y, float speed);
+	~Game_GUI();
+
 	void pollEvents();
-	void update();
 	void render();
+	void update() override;
+};
 
+class Game_GUI : public Game
+{
+private:
 
+	// Window
+	sf::RenderWindow* window;
+	sf::VideoMode videomode;
+	sf::Event ev;
+
+	// Clock
+	sf::Clock clock;
+	sf::Time elapsed_time, elapsed_time_limit;
+	float speed, update_freq;
+
+	// Functions
+	void initWindow();
+
+public:
+	Game_GUI(int tiles_x, int tiles_y, float speed);
+	~Game_GUI();
+
+	void pollEvents();
+	void render();
+	void update() override;
 };
