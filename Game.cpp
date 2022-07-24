@@ -1,6 +1,10 @@
 #include "Game.h"
 #include <iostream>
 
+Game::Game()
+{
+}
+
 Game::Game(int p_tiles_x, int p_tiles_y)
 {
 	this->map_size = sf::Vector2i(p_tiles_x, p_tiles_y);
@@ -18,7 +22,7 @@ void Game::initVariables()
 	this->snake_length_start = 5;
 	this->snake_length = this->snake_length_start;
 	this->snake_body.resize(this->snake_length);
-	this->direction = RIGHT;
+	this->new_direction = RIGHT;
 
 
 
@@ -81,7 +85,7 @@ void Game::move()
 	// Collsision with food
 	if (head_pos == this->food_pos)
 	{
-		std::cout << "EAT!" << std::endl;
+		//std::cout << "EAT!" << std::endl;
 		this->snake_length++;
 		this->spawnFood();
 	}
@@ -128,7 +132,7 @@ const bool Game::isRunning()
 		return false;
 		break;
 	default: 
-		return false;
+		return true;
 		break;
 	}
 
@@ -306,8 +310,27 @@ void Game_GUI::render()
 
 /*********************************************************************************************************************************/
 
+Game_SIM::Game_SIM()
+{
+}
+
 Game_SIM::Game_SIM(int tiles_x, int tiles_y)
 	:Game(tiles_x, tiles_y)
 {
+	this->moves = 0;
+}
 
+void Game_SIM::update()
+{
+	this->move();
+	this->moves++;
+	
+	//std::cout << this->snake_body[0].x << " " << this->snake_body[0].y << std::endl;
+}
+
+const int Game_SIM::getScore()
+{
+	int score = this->snake_length - this->snake_length_start;
+	if(score) std::cout << score << " with " << this->moves << " moves." <<std::endl;
+	return score;
 }

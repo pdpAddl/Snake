@@ -63,12 +63,13 @@ protected:
 
 public:
 	//Constructors / Destructors
+	Game();
 	Game(int tiles_x, int tiles_y);
 	virtual ~Game();
 
 	//Accessors
 	const bool isRunning();
-	const int getScore();
+	const int virtual getScore();
 
 	//Functions
 	virtual void update();
@@ -106,7 +107,10 @@ public:
 class Game_SIM : public Game
 {
 private:
-
+	int moves;
 public:
+	Game_SIM();
 	Game_SIM(int tiles_x, int tiles_y);
+	void update() override;
+	const int getScore() override;
 };

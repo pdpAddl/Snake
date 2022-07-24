@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <stdlib.h>
 
+#define N 10000
 
 enum turn_directions
 {
@@ -39,20 +40,30 @@ int main()
 	return 0;
 }
 */
-	
-	//Init SIM Game 
-	Game_SIM game(p, p);
+	//Init SIM Games
+	int turn_direction;
+	Game_SIM* games = new Game_SIM[N];
 
-	//Game loop
-	while (game.isRunning())
-	{
 
-		//Update
-		game.update();
-		game.turn(LEFT_TURN);
+	for (int i = 0; i < N; i++) {
+		games[i] = Game_SIM(p, p);
+	}
+		//Game loop
+	for (int i = 0; i < N; i++) {
+		while (games[i].isRunning())
+		{
+
+			//Update
+			games[i].update();
+
+			turn_direction = std::rand() % 3;
+			games[i].turn(turn_direction);
+		}
+
+		games[i].getScore();
 	}
 
-	game.getScore();
+	
 
 	return 0;
 }
