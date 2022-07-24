@@ -48,14 +48,11 @@ protected:
 	std::deque<sf::Vector2i> snake_body;
 	std::vector<sf::RectangleShape> snake_rectangles;
 	int snake_length, snake_length_start;
-	directions direction;
+	directions direction, new_direction;
 
 	// Food
 	sf::Vector2i food_pos;
 	sf::RectangleShape food_rectangle;
-
-	
-	
 
 	// Private Functions
 	void initVariables();
@@ -75,6 +72,7 @@ public:
 
 	//Functions
 	virtual void update();
+	void turn(int turn_direction);
 };
 
 class Game_GUI : public Game
@@ -88,7 +86,7 @@ private:
 
 	// Clock
 	sf::Clock clock;
-	sf::Time elapsed_time, elapsed_time_limit;
+	sf::Time elapsed_time_limit;
 	float speed, update_freq;
 
 	// Functions
@@ -97,34 +95,18 @@ private:
 public:
 	Game_GUI(int tiles_x, int tiles_y, float speed);
 	~Game_GUI();
+
+	bool clockReady();
 
 	void pollEvents();
 	void render();
 	void update() override;
 };
 
-class Game_GUI : public Game
+class Game_SIM : public Game
 {
 private:
 
-	// Window
-	sf::RenderWindow* window;
-	sf::VideoMode videomode;
-	sf::Event ev;
-
-	// Clock
-	sf::Clock clock;
-	sf::Time elapsed_time, elapsed_time_limit;
-	float speed, update_freq;
-
-	// Functions
-	void initWindow();
-
 public:
-	Game_GUI(int tiles_x, int tiles_y, float speed);
-	~Game_GUI();
-
-	void pollEvents();
-	void render();
-	void update() override;
+	Game_SIM(int tiles_x, int tiles_y);
 };

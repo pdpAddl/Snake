@@ -40,6 +40,8 @@ void Game::move()
 {
 	sf::Vector2i head_pos = sf::Vector2i(this->snake_body[0].x, this->snake_body[0].y);
 
+	this->direction = this->new_direction;
+
 	switch (this->direction)
 	{
 	case LEFT:
@@ -149,6 +151,31 @@ void Game::update()
 
 }
 
+void Game::turn(int turn_direction)
+{
+	// 0 - Stay
+	// 1 - Left (Relative)
+	// 2 - Right (Relative)
+
+	int current_direction = (int)this->direction;
+
+	switch (turn_direction)
+	{
+	case 0:
+		break;
+	case 1:
+		current_direction--;
+		break;
+	case 2:
+		current_direction++;
+		break;
+	}
+
+	current_direction = (current_direction % 4 + 4) % 4;
+
+
+	this->new_direction = (directions)current_direction;
+}
 //***********************************************************************************************************************
 
 Game_GUI::Game_GUI(int p_tiles_x, int p_tiles_y, float p_speed)
@@ -161,6 +188,19 @@ Game_GUI::Game_GUI(int p_tiles_x, int p_tiles_y, float p_speed)
 Game_GUI::~Game_GUI()
 {
 	delete this->window;
+}
+
+bool Game_GUI::clockReady()
+{
+	if (this->clock.getElapsedTime() < this->elapsed_time_limit)
+	{
+		return false;
+	}
+	else
+	{
+		this->clock.restart();
+		return true;
+	}
 }
 
 void Game_GUI::initWindow()
@@ -185,14 +225,10 @@ void Game_GUI::update()
 
 	this->pollEvents();
 
-	if (this->clock.getElapsedTime() > this->elapsed_time_limit)
-	{
-		// Update snake
-		this->move();
+	// Update snake
+	this->move();
 
-		// Restart clock
-		this->clock.restart();
-	}
+	
 
 }
 
@@ -215,16 +251,16 @@ void Game_GUI::pollEvents()
 				this->window->close();
 				break;
 			case sf::Keyboard::Up:
-				if (this->direction != DOWN) this->direction = UP;
+				if (this->direction != DOWN) this->new_direction = UP;
 				break;
 			case sf::Keyboard::Left:
-				if (this->direction != RIGHT) this->direction = LEFT;
+				if (this->direction != RIGHT) this->new_direction = LEFT;
 				break;
 			case sf::Keyboard::Down:
-				if (this->direction != UP) this->direction = DOWN;
+				if (this->direction != UP) this->new_direction = DOWN;
 				break;
 			case sf::Keyboard::Right:
-				if (this->direction != LEFT) this->direction = RIGHT;
+				if (this->direction != LEFT) this->new_direction = RIGHT;
 				break;
 			}
 
@@ -265,4 +301,13 @@ void Game_GUI::render()
 	this->window->draw(this->food_rectangle);
 
 	this->window->display();
+}
+
+
+/*********************************************************************************************************************************/
+
+Game_SIM::Game_SIM(int tiles_x, int tiles_y)
+	:Game(tiles_x, tiles_y)
+{
+
 }
