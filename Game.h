@@ -15,6 +15,11 @@ enum directions {
 	LEFT
 };
 
+enum game_states {
+	RUNNING,
+	ENDED
+};
+
 /*
 
 	Class that describes game logic
@@ -29,6 +34,9 @@ private:
 	sf::VideoMode videomode;
 	sf::Event ev;
 
+	// Game
+	game_states game_state;
+
 	// Map
 	sf::Vector2i map_size;
 	sf::Vector2f tile_size;
@@ -37,7 +45,7 @@ private:
 	// Snake
 	std::deque<sf::Vector2i> snake_body;
 	std::vector<sf::RectangleShape> snake_rectangles;
-	int snake_length;
+	int snake_length, snake_length_start;
 	directions direction;
 
 	// Food
@@ -66,7 +74,8 @@ public:
 	virtual ~Game();
 
 	//Accessors
-	const bool isRunning() const;
+	const bool isRunning();
+	const int getScore();
 
 	//Functions
 	void pollEvents();

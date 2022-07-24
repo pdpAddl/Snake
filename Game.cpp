@@ -20,9 +20,11 @@ void Game::initVariables()
 {
 	this->window = nullptr;
 
-	this->snake_length = 5;
-	this->snake_body.resize(this->snake_length);
+	this->game_state = RUNNING;
 
+	this->snake_length_start = 5;
+	this->snake_length = this->snake_length_start;
+	this->snake_body.resize(this->snake_length);
 	this->direction = RIGHT;
 
 	this->update_freq = this->speed * (this->map_size.x + this->map_size.y) / 4;
@@ -87,13 +89,15 @@ void Game::move()
 	// Collision with itself
 	if (std::find(this->snake_body.begin(), this->snake_body.end(), head_pos) != this->snake_body.end())
 	{
-		std::cout << "COLLISION!" << std::endl;
+		this->game_state = ENDED;
+		//std::cout << "COLLISION!" << std::endl;
 	}
 
 	// Collsision with border window
 	if ((head_pos.x >= this->map_size.x) || (head_pos.x < 0) || (head_pos.y >= this->map_size.y) || (head_pos.y < 0))
 	{
-		std::cout << "COLLISION with wall!" << std::endl;
+		this->game_state = ENDED;
+		//std::cout << "COLLISION with wall!" << std::endl;
 	}
 
 	// Collsision with food
@@ -134,9 +138,34 @@ sf::Vector2f Game::convertToWindowPos(sf::Vector2i tile_pos)
 }
 
 
-const bool Game::isRunning() const
+const bool Game::isRunning() 
 {
-	return this->window->isOpen();
+	if (!this->window->isOpen())
+	{
+		this->game_state = ENDED;
+	}
+
+	switch (this->game_state)
+	{
+	case RUNNING:
+		return true;
+		break;
+	case ENDED:
+		return false;
+		break;
+	default: 
+		return false;
+		break;
+	}
+
+	return this->game_state;
+}
+
+const int Game::getScore()
+{
+	int score = this->snake_length - this->snake_length_start;
+	std::cout << score;
+	return score;
 }
 
 void Game::pollEvents()

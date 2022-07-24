@@ -19,5 +19,7 @@ int main()
 		game.render();
 	}
 
+	game.getScore();
+
 	return 0;
 }
