@@ -47,7 +47,7 @@ private:
 	// Clock
 	sf::Clock clock;
 	sf::Time elapsed_time, elapsed_time_limit;
-	float update_freq;
+	float speed, update_freq;
 
 	
 	
@@ -62,7 +62,7 @@ private:
 
 public:
 	//Constructors / Destructors
-	Game(int tiles_x, int tiles_y, float update_freq);
+	Game(int tiles_x, int tiles_y, float speed);
 	virtual ~Game();
 
 	//Accessors
@@ -72,5 +72,6 @@ public:
 	void pollEvents();
 	void update();
 	void render();
+
 
 };

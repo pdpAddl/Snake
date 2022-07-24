@@ -1,10 +1,10 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game(int p_tiles_x, int p_tiles_y, float p_update_rate = 0.5f)
+Game::Game(int p_tiles_x, int p_tiles_y, float p_speed)
 {
 	this->map_size = sf::Vector2i(p_tiles_x, p_tiles_y);
-	this->update_freq = p_update_rate;
+	this->speed = p_speed;
 
 	this->initVariables();
 	this->initWindow();
@@ -25,6 +25,8 @@ void Game::initVariables()
 
 	this->direction = RIGHT;
 
+	this->update_freq = this->speed * (this->map_size.x + this->map_size.y) / 4;
+
 	// Init Snake Head
 	this->snake_body[0] = sf::Vector2i(this->map_size.x/2, this->map_size.y/2);
 
@@ -37,6 +39,9 @@ void Game::initVariables()
 
 	// Init Clock
 	this->elapsed_time_limit = sf::seconds(1 / this->update_freq);
+
+	// Init Food
+	this->spawnFood();
 }
 
 

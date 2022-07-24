@@ -2,8 +2,10 @@
 
 int main()
 {
+	int p = 20;
+
 	//Init Game Engine
-	Game game(5, 5, 5);
+	Game game(p, p, 1);
 	sf::Clock clock;
 
 	//Game loop
