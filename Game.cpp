@@ -40,6 +40,9 @@ void Game::initVariables()
 
 	// Init Food
 	this->spawnFood();
+	this->food_positions.push_back(this->food_pos);
+
+	this->moves = 0;
 }
 
 void Game::move()
@@ -154,6 +157,10 @@ void Game::update()
 {
 	// Update snake
 	this->move();
+	this->moves++;
+
+	this->moved_directions.push_back(this->direction);
+	if (this->food_pos != this->food_positions.back()) this->food_positions.push_back(this->food_pos);
 
 }
 
@@ -182,6 +189,18 @@ void Game::turn(int turn_direction)
 
 	this->new_direction = (directions)current_direction;
 }
+
+
+std::vector<directions> Game::getMovedDirections()
+{
+	return this->moved_directions;
+}
+
+std::vector<sf::Vector2i> Game::getFoodPositions()
+{
+	return this->food_positions;;
+}
+
 //***********************************************************************************************************************
 
 Game_SIM::Game_SIM()
@@ -191,13 +210,14 @@ Game_SIM::Game_SIM()
 Game_SIM::Game_SIM(int tiles_x, int tiles_y)
 	:Game(tiles_x, tiles_y)
 {
-	this->moves = 0;
+	//this->moves = 0;
 	//this->head_positions.resize(0);
 	//this->food_positions.resize(0);
 
-	this->food_positions.push_back(this->food_pos);
+	//this->food_positions.push_back(this->food_pos);
 }
 
+/*
 void Game_SIM::update()
 {
 	this->move();
@@ -208,6 +228,7 @@ void Game_SIM::update()
 	
 	//std::cout << this->snake_body[0].x << " " << this->snake_body[0].y << std::endl;
 }
+*/
 
 const int Game_SIM::getScore()
 {
@@ -215,17 +236,6 @@ const int Game_SIM::getScore()
 	//if(score) std::cout << score << " with " << this->moves << " moves." <<std::endl;
 	return score;
 }
-
-std::vector<directions> Game_SIM::getMovedDirections()
-{
-	return this->moved_directions;
-}
-
-std::vector<sf::Vector2i> Game_SIM::getFoodPositions()
-{
-	return this->food_positions;;
-}
-
 
 /******************************************************************************************************************************************/
 
@@ -357,10 +367,12 @@ void Game_GUI::render()
 Game_REP::Game_REP(int tiles_x, int tiles_y, float speed, std::vector<directions> p_directions, std::vector<sf::Vector2i> p_food_positions)
 	:Game_GUI(tiles_x, tiles_y, speed)
 {
-	this->moved = 0;
-	this->moved_directions = p_directions;
-	this->food_positions = p_food_positions;
+	this->tomove_directions = p_directions;
+	this->toplacefood_positions = p_food_positions;
 
+	this->tomove_directions.erase(tomove_directions.begin());
+
+	this->spawnFood();
 }
 
 void Game_REP::update()
@@ -368,12 +380,22 @@ void Game_REP::update()
 	// Update snake
 	this->move();
 
-	if(moved<moved_directions.size()) this->new_direction = moved_directions[moved];
+	if (moved < tomove_directions.size())
+	{
+		this->new_direction = tomove_directions[moved];
+	}
 
 	this->moved++;
+
+	this->moved_directions.push_back(this->direction);
+	if (this->food_pos != this->food_positions.back())
+	{
+		this->food_positions.push_back(this->food_pos);
+	}
 }
 
 void Game_REP::spawnFood()
 {
-	this->food_pos = this->food_positions[snake_length - snake_length_start];
+	this->food_pos = this->toplacefood_positions[snake_length - snake_length_start];
+	return;
 }

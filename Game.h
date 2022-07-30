@@ -60,6 +60,10 @@ protected:
 	virtual void spawnFood();
 	sf::Vector2f convertToWindowPos(sf::Vector2i tile_pos);
 
+	// Trace
+	int moves;
+	std::vector<directions> moved_directions;
+	std::vector<sf::Vector2i> food_positions;
 
 public:
 	//Constructors / Destructors
@@ -74,6 +78,9 @@ public:
 	//Functions
 	virtual void update();
 	void turn(int turn_direction);
+
+	std::vector<directions> getMovedDirections();
+	std::vector<sf::Vector2i> getFoodPositions();
 };
 
 
@@ -81,17 +88,12 @@ public:
 class Game_SIM : public Game
 {
 private:
-	int moves;
-	std::vector<directions> moved_directions;
-	std::vector<sf::Vector2i> food_positions;
 
 public:
 	Game_SIM();
 	Game_SIM(int tiles_x, int tiles_y);
-	void update() override;
+	//void update() override;
 	const int getScore() override;
-	std::vector<directions> getMovedDirections();
-	std::vector<sf::Vector2i> getFoodPositions();
 };
 
 
@@ -129,8 +131,8 @@ public:
 class Game_REP : public Game_GUI
 {
 private:
-	std::vector<directions> moved_directions;
-	std::vector<sf::Vector2i> food_positions;
+	std::vector<directions> tomove_directions;
+	std::vector<sf::Vector2i> toplacefood_positions;
 	int moved;
 
 public:

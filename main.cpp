@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define N 1
+#define N 10000
 #define SIZE_X 20
 #define SIZE_Y 20
-#define GAMESPEED 0.1
+#define GAMESPEED 1
 
 enum turn_directions
 {
@@ -71,8 +71,11 @@ int main()
 
 		score = games[i].getScore();
 
-		if (score >= high_score)
+		if (score > high_score)
 		{
+			moved_directions.clear();
+			food_pos.clear();
+
 			high_score = score;
 			moved_directions = games[i].getMovedDirections();
 			food_pos = games[i].getFoodPositions();
@@ -92,6 +95,15 @@ int main()
 				}
 				
 			}
+
+			moved_directions = highscore_game.getMovedDirections();
+			food_pos = highscore_game.getFoodPositions();
+
+			std::cout << std::endl << "REPLAY" << std::endl;
+			for (int i = 0; i < moved_directions.size(); i++) std::cout << direction_names[moved_directions[i]] << "; ";
+			std::cout << std::endl;
+			for (int i = 0; i < food_pos.size(); i++) std::cout << food_pos[i].x << "," << food_pos[i].y << "; ";
+			std::cout << std::endl;
 		}
 	}
 
