@@ -17,6 +17,8 @@ Game::~Game()
 
 void Game::initVariables()
 {
+	std::srand(std::time(NULL));
+
 	this->game_state = RUNNING;
 
 	this->snake_length_start = 5;
@@ -182,6 +184,51 @@ void Game::turn(int turn_direction)
 }
 //***********************************************************************************************************************
 
+Game_SIM::Game_SIM()
+{
+}
+
+Game_SIM::Game_SIM(int tiles_x, int tiles_y)
+	:Game(tiles_x, tiles_y)
+{
+	this->moves = 0;
+	//this->head_positions.resize(0);
+	//this->food_positions.resize(0);
+
+	this->food_positions.push_back(this->food_pos);
+}
+
+void Game_SIM::update()
+{
+	this->move();
+	this->moves++;
+
+	this->moved_directions.push_back(this->direction);
+	if (this->food_pos != this->food_positions.back()) this->food_positions.push_back(this->food_pos);
+	
+	//std::cout << this->snake_body[0].x << " " << this->snake_body[0].y << std::endl;
+}
+
+const int Game_SIM::getScore()
+{
+	int score = this->snake_length - this->snake_length_start;
+	//if(score) std::cout << score << " with " << this->moves << " moves." <<std::endl;
+	return score;
+}
+
+std::vector<directions> Game_SIM::getMovedDirections()
+{
+	return this->moved_directions;
+}
+
+std::vector<sf::Vector2i> Game_SIM::getFoodPositions()
+{
+	return this->food_positions;;
+}
+
+
+/******************************************************************************************************************************************/
+
 Game_GUI::Game_GUI(int p_tiles_x, int p_tiles_y, float p_speed)
 	:Game(p_tiles_x, p_tiles_y)
 {
@@ -216,7 +263,7 @@ void Game_GUI::initWindow()
 	this->window->setFramerateLimit(144);
 
 	this->tile_size = sf::Vector2f(this->videomode.width / this->map_size.x, this->videomode.height / this->map_size.y);
-	
+
 	// Init Clock
 	this->update_freq = this->speed * (this->map_size.x + this->map_size.y) / 4;
 	this->elapsed_time_limit = sf::seconds(1 / this->update_freq);
@@ -231,9 +278,6 @@ void Game_GUI::update()
 
 	// Update snake
 	this->move();
-
-	
-
 }
 
 void Game_GUI::pollEvents()
@@ -310,27 +354,26 @@ void Game_GUI::render()
 
 /*********************************************************************************************************************************/
 
-Game_SIM::Game_SIM()
+Game_REP::Game_REP(int tiles_x, int tiles_y, float speed, std::vector<directions> p_directions, std::vector<sf::Vector2i> p_food_positions)
+	:Game_GUI(tiles_x, tiles_y, speed)
 {
+	this->moved = 0;
+	this->moved_directions = p_directions;
+	this->food_positions = p_food_positions;
+
 }
 
-Game_SIM::Game_SIM(int tiles_x, int tiles_y)
-	:Game(tiles_x, tiles_y)
+void Game_REP::update()
 {
-	this->moves = 0;
-}
-
-void Game_SIM::update()
-{
+	// Update snake
 	this->move();
-	this->moves++;
-	
-	//std::cout << this->snake_body[0].x << " " << this->snake_body[0].y << std::endl;
+
+	if(moved<moved_directions.size()) this->new_direction = moved_directions[moved];
+
+	this->moved++;
 }
 
-const int Game_SIM::getScore()
+void Game_REP::spawnFood()
 {
-	int score = this->snake_length - this->snake_length_start;
-	if(score) std::cout << score << " with " << this->moves << " moves." <<std::endl;
-	return score;
+	this->food_pos = this->food_positions[snake_length - snake_length_start];
 }

@@ -57,7 +57,7 @@ protected:
 	// Private Functions
 	void initVariables();
 	void move();
-	void spawnFood();
+	virtual void spawnFood();
 	sf::Vector2f convertToWindowPos(sf::Vector2i tile_pos);
 
 
@@ -76,9 +76,29 @@ public:
 	void turn(int turn_direction);
 };
 
-class Game_GUI : public Game
+
+
+class Game_SIM : public Game
 {
 private:
+	int moves;
+	std::vector<directions> moved_directions;
+	std::vector<sf::Vector2i> food_positions;
+
+public:
+	Game_SIM();
+	Game_SIM(int tiles_x, int tiles_y);
+	void update() override;
+	const int getScore() override;
+	std::vector<directions> getMovedDirections();
+	std::vector<sf::Vector2i> getFoodPositions();
+};
+
+
+
+class Game_GUI : public Game
+{
+protected:
 
 	// Window
 	sf::RenderWindow* window;
@@ -104,13 +124,17 @@ public:
 	void update() override;
 };
 
-class Game_SIM : public Game
+
+// Class for replaying simulated games
+class Game_REP : public Game_GUI
 {
 private:
-	int moves;
+	std::vector<directions> moved_directions;
+	std::vector<sf::Vector2i> food_positions;
+	int moved;
+
 public:
-	Game_SIM();
-	Game_SIM(int tiles_x, int tiles_y);
+	Game_REP(int tiles_x, int tiles_y, float speed, std::vector<directions> moved_directions, std::vector<sf::Vector2i> food_positions);
 	void update() override;
-	const int getScore() override;
+	void spawnFood() override;
 };

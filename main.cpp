@@ -1,7 +1,11 @@
 #include "Game.h"
 #include <stdlib.h>
+#include <iostream>
 
-#define N 10000
+#define N 1
+#define SIZE_X 20
+#define SIZE_Y 20
+#define GAMESPEED 0.1
 
 enum turn_directions
 {
@@ -13,7 +17,6 @@ enum turn_directions
 
 int main()
 {
-	int p = 20;
 	/*
 
 	//Init GUI Game 
@@ -41,12 +44,18 @@ int main()
 }
 */
 	//Init SIM Games
-	int turn_direction;
+	int turn_direction, high_score, score;
+	std::vector<directions> moved_directions;
+	std::vector<sf::Vector2i> head_pos, food_pos;
+
+	const char* direction_names [4] = {"UP", "RIGHT", "DOWN", "LEFT"};
+
 	Game_SIM* games = new Game_SIM[N];
 
+	high_score = 0;
 
 	for (int i = 0; i < N; i++) {
-		games[i] = Game_SIM(p, p);
+		games[i] = Game_SIM(SIZE_X, SIZE_Y);
 	}
 		//Game loop
 	for (int i = 0; i < N; i++) {
@@ -60,7 +69,30 @@ int main()
 			games[i].turn(turn_direction);
 		}
 
-		games[i].getScore();
+		score = games[i].getScore();
+
+		if (score >= high_score)
+		{
+			high_score = score;
+			moved_directions = games[i].getMovedDirections();
+			food_pos = games[i].getFoodPositions();
+
+			std::cout << "NEW HIGH SCORE BY GAME #"<< i<< ": " << score << std::endl;
+			for (int i = 0; i < moved_directions.size(); i++) std::cout << direction_names[moved_directions[i]] << "; ";
+			std::cout << std::endl;
+			for (int i = 0; i < food_pos.size(); i++) std::cout << food_pos[i].x << "," << food_pos[i].y << "; ";
+
+			Game_REP highscore_game(SIZE_X, SIZE_Y, GAMESPEED, moved_directions, food_pos);
+			while (highscore_game.isRunning())
+			{
+				if (highscore_game.clockReady())
+				{
+					highscore_game.update();
+					highscore_game.render();
+				}
+				
+			}
+		}
 	}
 
 	
