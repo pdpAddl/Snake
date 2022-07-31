@@ -80,10 +80,12 @@ int main()
 			moved_directions = games[i].getMovedDirections();
 			food_pos = games[i].getFoodPositions();
 
-			std::cout << "NEW HIGH SCORE BY GAME #"<< i<< ": " << score << std::endl;
+			
+			std::cout << "NEW HIGH SCORE BY GAME #"<< i<< ": " << score << std::endl;/*
 			for (int i = 0; i < moved_directions.size(); i++) std::cout << direction_names[moved_directions[i]] << "; ";
 			std::cout << std::endl;
 			for (int i = 0; i < food_pos.size(); i++) std::cout << food_pos[i].x << "," << food_pos[i].y << "; ";
+			*/
 
 			Game_REP highscore_game(SIZE_X, SIZE_Y, GAMESPEED, moved_directions, food_pos);
 			while (highscore_game.isRunning())
@@ -99,11 +101,13 @@ int main()
 			moved_directions = highscore_game.getMovedDirections();
 			food_pos = highscore_game.getFoodPositions();
 
+			/*
 			std::cout << std::endl << "REPLAY" << std::endl;
 			for (int i = 0; i < moved_directions.size(); i++) std::cout << direction_names[moved_directions[i]] << "; ";
 			std::cout << std::endl;
 			for (int i = 0; i < food_pos.size(); i++) std::cout << food_pos[i].x << "," << food_pos[i].y << "; ";
 			std::cout << std::endl;
+			*/
 		}
 	}
 
