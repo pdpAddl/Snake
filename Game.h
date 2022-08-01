@@ -116,6 +116,7 @@ protected:
 	void initWindow();
 
 public:
+	Game_GUI();
 	Game_GUI(int tiles_x, int tiles_y, float speed);
 	~Game_GUI();
 

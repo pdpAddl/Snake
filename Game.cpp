@@ -239,6 +239,10 @@ const int Game_SIM::getScore()
 
 /******************************************************************************************************************************************/
 
+Game_GUI::Game_GUI()
+{
+}
+
 Game_GUI::Game_GUI(int p_tiles_x, int p_tiles_y, float p_speed)
 	:Game(p_tiles_x, p_tiles_y)
 {
@@ -248,7 +252,7 @@ Game_GUI::Game_GUI(int p_tiles_x, int p_tiles_y, float p_speed)
 
 Game_GUI::~Game_GUI()
 {
-	delete this->window;
+	//delete this->window;
 }
 
 bool Game_GUI::clockReady()
@@ -288,6 +292,9 @@ void Game_GUI::update()
 
 	// Update snake
 	this->move();
+
+	this->moved_directions.push_back(this->direction);
+	if (this->food_pos != this->food_positions.back()) this->food_positions.push_back(this->food_pos);
 }
 
 void Game_GUI::pollEvents()
@@ -370,7 +377,7 @@ Game_REP::Game_REP(int tiles_x, int tiles_y, float speed, std::vector<directions
 	this->tomove_directions = p_directions;
 	this->toplacefood_positions = p_food_positions;
 
-	this->tomove_directions.erase(tomove_directions.begin());
+	if(this->tomove_directions.size()) this->tomove_directions.erase(tomove_directions.begin());
 
 	this->spawnFood();
 }
