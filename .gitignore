@@ -334,5 +334,5 @@ ASALocalRun/
 healthchecksdb
 
 # Debug
-x64/Debug/
-Debug/
+/x64/Debug/
+/Debug/
