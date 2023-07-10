@@ -1,2 +1,0 @@
-D:\Create\Programmieren\C++\Snake\x64\Debug\Snake.exe
-C:\Create\Programmieren\C++\SFML\Snake\x64\Debug\Snake.exe
