@@ -332,3 +332,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Debug
+x64/Debug/
+Debug/

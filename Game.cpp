@@ -200,6 +200,19 @@ std::vector<sf::Vector2i> Game::getFoodPositions()
 {
 	return this->food_positions;;
 }
+sf::Vector2i Game::getCurrentFoodPosition()
+{
+	return this->food_pos;
+}
+sf::Vector2i Game::getCurrentHeadPosition()
+{
+	return this->snake_body.front();
+}
+
+directions Game::getCurrentDirection()
+{
+	return this->direction;
+}
 
 //***********************************************************************************************************************
 

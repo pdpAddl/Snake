@@ -81,6 +81,10 @@ public:
 
 	std::vector<directions> getMovedDirections();
 	std::vector<sf::Vector2i> getFoodPositions();
+
+	sf::Vector2i getCurrentFoodPosition();
+	sf::Vector2i getCurrentHeadPosition();
+	directions getCurrentDirection();
 };
 
 
