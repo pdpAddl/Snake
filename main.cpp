@@ -15,6 +15,12 @@ enum turn_directions
 };
 
 
+int getTurnDirectionRandom()
+{
+	return std::rand() % 3;
+}
+
+
 int main()
 {
 	/*
@@ -65,7 +71,7 @@ int main()
 			//Update
 			games[i].update();
 
-			turn_direction = std::rand() % 3;
+			turn_direction = getTurnDirectionRandom();
 			games[i].turn(turn_direction);
 		}
 
