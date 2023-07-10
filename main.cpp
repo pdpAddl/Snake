@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define N 10000
+#define N 100
 #define SIZE_X 20
 #define SIZE_Y 20
 #define GAMESPEED 1
@@ -18,6 +18,76 @@ enum turn_directions
 int getTurnDirectionRandom()
 {
 	return std::rand() % 3;
+}
+
+int getTurnDirectionBasedOnFood(sf::Vector2i food_pos, sf::Vector2i head_pos, directions direction)
+{
+	directions wantedDir;
+	turn_directions turnDir;
+
+	int distanceX = food_pos.x - head_pos.x;
+	int distanceY = food_pos.y - head_pos.y;
+
+	if (std::abs(distanceX) > std::abs(distanceY))
+	{
+		//std::cout << "x: " << distanceX << "\n";
+		if (distanceX > 0) wantedDir = RIGHT;
+		else wantedDir = LEFT;
+	}
+	else
+	{
+		//std::cout << "y: " << distanceY << "\n";
+		if (distanceY > 0) wantedDir = DOWN;
+		else wantedDir = UP;
+	}
+
+	switch (direction)
+	{
+	case UP:
+		switch (wantedDir)
+		{
+		case UP: turnDir = STAY; break;
+		case RIGHT: turnDir = RIGHT_TURN; break;
+		case LEFT: turnDir = LEFT_TURN; break;
+		case DOWN: turnDir = turn_directions(std::rand() % 2 + 1); break;
+		}
+		break;
+	case RIGHT:
+		switch (wantedDir)
+		{
+		case UP: turnDir = LEFT_TURN; break;
+		case RIGHT: turnDir = STAY; break;
+		case LEFT: turnDir = turn_directions(std::rand() % 2 + 1); break;
+		case DOWN: turnDir = RIGHT_TURN; break;
+		}
+		break;
+	case LEFT:
+		switch (wantedDir)
+		{
+		case UP: turnDir = RIGHT_TURN; break;
+		case RIGHT: turnDir = turn_directions(std::rand() % 2 + 1); break;
+		case LEFT: turnDir = STAY; break;
+		case DOWN: turnDir = LEFT_TURN; break;
+		}
+		break;
+	case DOWN:
+		switch (wantedDir)
+		{
+		case UP: turnDir = turn_directions(std::rand() % 2 + 1); break;
+		case RIGHT: turnDir = LEFT_TURN; break;
+		case LEFT: turnDir = RIGHT_TURN; break;
+		case DOWN: turnDir = STAY; break;
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	//std::cout << "Current direction: " << direction << "\t Wanted direction: " << wantedDir << "\t Turning Direction: " << turnDir <<"\n";
+
+	return turnDir;
+
 }
 
 
@@ -71,7 +141,7 @@ int main()
 			//Update
 			games[i].update();
 
-			turn_direction = getTurnDirectionRandom();
+			turn_direction = getTurnDirectionBasedOnFood(games[i].getCurrentFoodPosition(), games[i].getCurrentHeadPosition(), games[i].getCurrentDirection());
 			games[i].turn(turn_direction);
 		}
 
