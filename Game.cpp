@@ -165,6 +165,16 @@ sf::Vector2i Game::getCurrentFoodPosition()
 	return this->food_pos;
 }
 
+sf::Vector2i Game::getCurrentHeadPosition()
+{
+	return this->snake.getCurrentHeadPosition();
+}
+
+absolute_directions Game::getCurrentDirection()
+{
+	return this->snake.getCurrentDirection();
+}
+
 //***********************************************************************************************************************
 
 Game_SIM::Game_SIM()
@@ -174,25 +184,6 @@ Game_SIM::Game_SIM()
 Game_SIM::Game_SIM(int tiles_x, int tiles_y)
 	:Game(tiles_x, tiles_y)
 {
-	//this->moves = 0;
-	//this->head_positions.resize(0);
-	//this->food_positions.resize(0);
-
-	//this->food_positions.push_back(this->food_pos);
-}
-
-/*
-void Game_SIM::update()
-{
-	this->move();
-	this->moves++;
-
-	this->moved_directions.push_back(this->direction);
-	if (this->food_pos != this->food_positions.back()) this->food_positions.push_back(this->food_pos);
-	
-	//std::cout << this->snake_body[0].x << " " << this->snake_body[0].y << std::endl;
-}
-*/
 
 const int Game_SIM::getScore()
 {

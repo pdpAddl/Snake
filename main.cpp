@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define N 1
+#define N 100
 #define SIZE_X 20
 #define SIZE_Y 20
 #define GAMESPEED 1
@@ -135,8 +135,8 @@ int main()
 			//Update
 			games[i].update();
 
-			//turn_direction = getTurnDirectionBasedOnFood(games[i].getCurrentFoodPosition(), games[i].snake.getCurrentHeadPosition(), games[i].getCurrentDirection());
-			turn_direction = getTurnDirectionRandom();
+			turn_direction = getTurnDirectionBasedOnFood(games[i].getCurrentFoodPosition(), games[i].getCurrentHeadPosition(), games[i].getCurrentDirection());
+			//turn_direction = getTurnDirectionRandom();
 			games[i].turn(turn_direction);
 			//std::cout << turn_direction;
 		}

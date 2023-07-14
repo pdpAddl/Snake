@@ -70,6 +70,8 @@ public:
 	std::vector<sf::Vector2i> getFoodPositions();
 
 	sf::Vector2i getCurrentFoodPosition();
+	sf::Vector2i getCurrentHeadPosition();
+	absolute_directions getCurrentDirection();
 };
 
 
