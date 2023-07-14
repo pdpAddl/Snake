@@ -1,19 +1,8 @@
 #pragma once
 
-#include <deque>
-#include <stdlib.h>
+#include "Snake.h"
 
-#include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
-
-
-
-enum directions {
-	UP,
-	RIGHT,
-	DOWN,
-	LEFT
-};
 
 enum game_states {
 	RUNNING,
@@ -45,10 +34,8 @@ protected:
 	//std::vector<std::vector<int>> map;
 
 	// Snake
-	std::deque<sf::Vector2i> snake_body;
+	Snake snake;
 	std::vector<sf::RectangleShape> snake_rectangles;
-	int snake_length, snake_length_start;
-	directions direction, new_direction;
 
 	// Food
 	sf::Vector2i food_pos;
@@ -62,7 +49,7 @@ protected:
 
 	// Trace
 	int moves;
-	std::vector<directions> moved_directions;
+	std::vector<absolute_directions> moved_directions;
 	std::vector<sf::Vector2i> food_positions;
 
 public:
@@ -79,12 +66,10 @@ public:
 	virtual void update();
 	void turn(int turn_direction);
 
-	std::vector<directions> getMovedDirections();
+	std::vector<absolute_directions> getMovedDirections();
 	std::vector<sf::Vector2i> getFoodPositions();
 
 	sf::Vector2i getCurrentFoodPosition();
-	sf::Vector2i getCurrentHeadPosition();
-	directions getCurrentDirection();
 };
 
 
@@ -136,12 +121,12 @@ public:
 class Game_REP : public Game_GUI
 {
 private:
-	std::vector<directions> tomove_directions;
+	std::vector<absolute_directions> tomove_directions;
 	std::vector<sf::Vector2i> toplacefood_positions;
 	int moved;
 
 public:
-	Game_REP(int tiles_x, int tiles_y, float speed, std::vector<directions> moved_directions, std::vector<sf::Vector2i> food_positions);
+	Game_REP(int tiles_x, int tiles_y, float speed, std::vector<absolute_directions> moved_directions, std::vector<sf::Vector2i> food_positions);
 	void update() override;
 	void spawnFood() override;
 };

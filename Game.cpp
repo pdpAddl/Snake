@@ -19,24 +19,8 @@ void Game::initVariables()
 {
 	std::srand(std::time(NULL));
 
-	this->game_state = RUNNING;
-
-	this->snake_length_start = 5;
-	this->snake_length = this->snake_length_start;
-	this->snake_body.resize(this->snake_length);
-	this->new_direction = RIGHT;
-
-
-
-	// Init Snake Head
-	this->snake_body[0] = sf::Vector2i(this->map_size.x / 2, this->map_size.y / 2);
-
-	// Init Snake Body
-	for (int i = 1; i < this->snake_length; i++)
-	{
-		this->snake_body[i] = sf::Vector2i(this->snake_body[i - 1].x - 1, this->snake_body[i - 1].y);
-		//std::cout << this->snake_body[i].x << " " << this->snake_body[i].y << std::endl;
-	}
+	this->game_state = RUNNING; 
+	this->snake = Snake(sf::Vector2i(this->map_size.x / 2, this->map_size.y / 2));
 
 	// Init Food
 	this->spawnFood();
@@ -47,11 +31,10 @@ void Game::initVariables()
 
 void Game::move()
 {
-	sf::Vector2i head_pos = sf::Vector2i(this->snake_body[0].x, this->snake_body[0].y);
+	sf::Vector2i head_pos = this->snake.getCurrentHeadPosition();
+	absolute_directions direction = this->snake.getNewDirection();
 
-	this->direction = this->new_direction;
-
-	switch (this->direction)
+	switch (direction)
 	{
 	case LEFT:
 		head_pos.x--;
@@ -69,12 +52,11 @@ void Game::move()
 		break;
 	}
 
-
-
 	// Collision detection
 
 	// Collision with itself
-	if (std::find(this->snake_body.begin(), this->snake_body.end(), head_pos) != this->snake_body.end())
+	std::deque <sf::Vector2i> body = this->snake.getBodyPositions();
+	if (std::find(body.begin(), body.end(), head_pos) != body.end())
 	{
 		this->game_state = ENDED;
 		//std::cout << "COLLISION!" << std::endl;
@@ -87,35 +69,34 @@ void Game::move()
 		//std::cout << "COLLISION with wall!" << std::endl;
 	}
 
+	bool eating = false;
+
 	// Collsision with food
 	if (head_pos == this->food_pos)
 	{
-		//std::cout << "EAT!" << std::endl;
-		this->snake_length++;
+		eating = true;
 		this->spawnFood();
-	}
-	else
-	{
-		this->snake_body.pop_back();
-	}
-
-
-	this->snake_body.push_front(head_pos);
-	
+	}	
+	this->snake.move_forward(head_pos, eating);
 }
 
 void Game::spawnFood()
 {
 	int rand_x, rand_y;
 	sf::Vector2i food_pos_tmp;
-	do
+	/*do
 	{
 		rand_x = std::rand() % this->map_size.x;
 		rand_y = std::rand() % this->map_size.y;
 		food_pos_tmp = sf::Vector2i(rand_x, rand_y);
 
 	} while (std::find(this->snake_body.begin(), this->snake_body.end(), food_pos_tmp) != this->snake_body.end());
-	
+	*/
+
+	rand_x = std::rand() % this->map_size.x;
+	rand_y = std::rand() % this->map_size.y;
+	food_pos_tmp = sf::Vector2i(rand_x, rand_y);
+
 	this->food_pos = food_pos_tmp;
 }
 
@@ -146,8 +127,8 @@ const bool Game::isRunning()
 
 const int Game::getScore()
 {
-	int score = this->snake_length - this->snake_length_start;
-	std::cout << score;
+	int score = this->snake.getLength() - this->snake.getStartLength();
+	//std::cout << score;
 	return score;
 }
 
@@ -159,39 +140,18 @@ void Game::update()
 	this->move();
 	this->moves++;
 
-	this->moved_directions.push_back(this->direction);
+	this->moved_directions.push_back(this->snake.getCurrentDirection());
 	if (this->food_pos != this->food_positions.back()) this->food_positions.push_back(this->food_pos);
 
 }
 
 void Game::turn(int turn_direction)
 {
-	// 0 - Stay
-	// 1 - Left (Relative)
-	// 2 - Right (Relative)
-
-	int current_direction = (int)this->direction;
-
-	switch (turn_direction)
-	{
-	case 0:
-		break;
-	case 1:
-		current_direction--;
-		break;
-	case 2:
-		current_direction++;
-		break;
-	}
-
-	current_direction = (current_direction % 4 + 4) % 4;
-
-
-	this->new_direction = (directions)current_direction;
+	this->snake.turn((relative_directions)turn_direction);
 }
 
 
-std::vector<directions> Game::getMovedDirections()
+std::vector<absolute_directions> Game::getMovedDirections()
 {
 	return this->moved_directions;
 }
@@ -203,15 +163,6 @@ std::vector<sf::Vector2i> Game::getFoodPositions()
 sf::Vector2i Game::getCurrentFoodPosition()
 {
 	return this->food_pos;
-}
-sf::Vector2i Game::getCurrentHeadPosition()
-{
-	return this->snake_body.front();
-}
-
-directions Game::getCurrentDirection()
-{
-	return this->direction;
 }
 
 //***********************************************************************************************************************
@@ -245,7 +196,7 @@ void Game_SIM::update()
 
 const int Game_SIM::getScore()
 {
-	int score = this->snake_length - this->snake_length_start;
+	int score = this->snake.getLength() - this->snake.getStartLength();
 	//if(score) std::cout << score << " with " << this->moves << " moves." <<std::endl;
 	return score;
 }
@@ -306,7 +257,7 @@ void Game_GUI::update()
 	// Update snake
 	this->move();
 
-	this->moved_directions.push_back(this->direction);
+	this->moved_directions.push_back(this->snake.getCurrentDirection());
 	if (this->food_pos != this->food_positions.back()) this->food_positions.push_back(this->food_pos);
 }
 
@@ -323,25 +274,28 @@ void Game_GUI::pollEvents()
 			break;
 
 		case sf::Event::KeyPressed:
+			absolute_directions current_direction = this->snake.getCurrentDirection();
 			switch (this->ev.key.code)
 			{
 			case sf::Keyboard::Escape:
 				this->window->close();
 				break;
 			case sf::Keyboard::Up:
-				if (this->direction != DOWN) this->new_direction = UP;
+				if (current_direction != DOWN) this->snake.set_direction(UP);
 				break;
 			case sf::Keyboard::Left:
-				if (this->direction != RIGHT) this->new_direction = LEFT;
+				if (current_direction != RIGHT) this->snake.set_direction(LEFT);
 				break;
 			case sf::Keyboard::Down:
-				if (this->direction != UP) this->new_direction = DOWN;
+				if (current_direction != UP) this->snake.set_direction(DOWN);
 				break;
 			case sf::Keyboard::Right:
-				if (this->direction != LEFT) this->new_direction = RIGHT;
+				if (current_direction != LEFT) this->snake.set_direction(RIGHT);
+				break;
+			default:
+				this->snake.set_direction(current_direction);
 				break;
 			}
-
 			break;
 		}
 	}
@@ -354,12 +308,12 @@ void Game_GUI::render()
 
 
 	// Draw snake
-	this->snake_rectangles.resize(this->snake_length);
+	this->snake_rectangles.resize(this->snake.getLength());
 	sf::Vector2f current_pos_window;
 
-	for (int i = 0; i < this->snake_length; i++)
+	for (int i = 0; i < this->snake.getLength(); i++)
 	{
-		current_pos_window = this->convertToWindowPos(this->snake_body[i]);
+		current_pos_window = this->convertToWindowPos(this->snake.getBodyPositions()[i]);
 
 		//std::cout << current_pos_window.x << " " << current_pos_window.y << std::endl;
 
@@ -384,7 +338,7 @@ void Game_GUI::render()
 
 /*********************************************************************************************************************************/
 
-Game_REP::Game_REP(int tiles_x, int tiles_y, float speed, std::vector<directions> p_directions, std::vector<sf::Vector2i> p_food_positions)
+Game_REP::Game_REP(int tiles_x, int tiles_y, float speed, std::vector<absolute_directions> p_directions, std::vector<sf::Vector2i> p_food_positions)
 	:Game_GUI(tiles_x, tiles_y, speed)
 {
 	this->tomove_directions = p_directions;
@@ -402,20 +356,23 @@ void Game_REP::update()
 
 	if (moved < tomove_directions.size())
 	{
-		this->new_direction = tomove_directions[moved];
+		this->snake.set_direction(tomove_directions[moved]);
 	}
 
 	this->moved++;
 
-	this->moved_directions.push_back(this->direction);
+	this->moved_directions.push_back(this->snake.getCurrentDirection());
 	if (this->food_pos != this->food_positions.back())
 	{
 		this->food_positions.push_back(this->food_pos);
 	}
+
+	this->spawnFood();
+
 }
 
 void Game_REP::spawnFood()
 {
-	this->food_pos = this->toplacefood_positions[snake_length - snake_length_start];
+	this->food_pos = this->toplacefood_positions[this->getScore()];
 	return;
 }

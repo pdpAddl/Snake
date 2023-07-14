@@ -2,18 +2,11 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define N 5
+#define N 1
 #define SIZE_X 20
 #define SIZE_Y 20
 #define GAMESPEED 1
 #define GAMEMODE 1
-
-enum turn_directions
-{
-	STAY,
-	LEFT_TURN,
-	RIGHT_TURN
-};
 
 
 int getTurnDirectionRandom()
@@ -21,10 +14,10 @@ int getTurnDirectionRandom()
 	return std::rand() % 3;
 }
 
-int getTurnDirectionBasedOnFood(sf::Vector2i food_pos, sf::Vector2i head_pos, directions direction)
+int getTurnDirectionBasedOnFood(sf::Vector2i food_pos, sf::Vector2i head_pos, absolute_directions direction)
 {
-	directions wantedDir;
-	turn_directions turnDir;
+	absolute_directions wantedDir;
+	relative_directions turnDir;
 
 	int distanceX = food_pos.x - head_pos.x;
 	int distanceY = food_pos.y - head_pos.y;
@@ -42,6 +35,8 @@ int getTurnDirectionBasedOnFood(sf::Vector2i food_pos, sf::Vector2i head_pos, di
 		else wantedDir = UP;
 	}
 
+	turnDir = STAY;
+
 	switch (direction)
 	{
 	case UP:
@@ -50,7 +45,7 @@ int getTurnDirectionBasedOnFood(sf::Vector2i food_pos, sf::Vector2i head_pos, di
 		case UP: turnDir = STAY; break;
 		case RIGHT: turnDir = RIGHT_TURN; break;
 		case LEFT: turnDir = LEFT_TURN; break;
-		case DOWN: turnDir = turn_directions(std::rand() % 2 + 1); break;
+		case DOWN: turnDir = relative_directions(std::rand() % 2 + 1); break;
 		}
 		break;
 	case RIGHT:
@@ -58,7 +53,7 @@ int getTurnDirectionBasedOnFood(sf::Vector2i food_pos, sf::Vector2i head_pos, di
 		{
 		case UP: turnDir = LEFT_TURN; break;
 		case RIGHT: turnDir = STAY; break;
-		case LEFT: turnDir = turn_directions(std::rand() % 2 + 1); break;
+		case LEFT: turnDir = relative_directions(std::rand() % 2 + 1); break;
 		case DOWN: turnDir = RIGHT_TURN; break;
 		}
 		break;
@@ -66,7 +61,7 @@ int getTurnDirectionBasedOnFood(sf::Vector2i food_pos, sf::Vector2i head_pos, di
 		switch (wantedDir)
 		{
 		case UP: turnDir = RIGHT_TURN; break;
-		case RIGHT: turnDir = turn_directions(std::rand() % 2 + 1); break;
+		case RIGHT: turnDir = relative_directions(std::rand() % 2 + 1); break;
 		case LEFT: turnDir = STAY; break;
 		case DOWN: turnDir = LEFT_TURN; break;
 		}
@@ -74,7 +69,7 @@ int getTurnDirectionBasedOnFood(sf::Vector2i food_pos, sf::Vector2i head_pos, di
 	case DOWN:
 		switch (wantedDir)
 		{
-		case UP: turnDir = turn_directions(std::rand() % 2 + 1); break;
+		case UP: turnDir = relative_directions(std::rand() % 2 + 1); break;
 		case RIGHT: turnDir = LEFT_TURN; break;
 		case LEFT: turnDir = RIGHT_TURN; break;
 		case DOWN: turnDir = STAY; break;
@@ -122,10 +117,8 @@ int main()
 
 	//Init SIM Games
 	int turn_direction, high_score, score;
-	std::vector<directions> moved_directions;
+	std::vector<absolute_directions> moved_directions;
 	std::vector<sf::Vector2i> head_pos, food_pos;
-
-	const char* direction_names [4] = {"UP", "RIGHT", "DOWN", "LEFT"};
 
 	Game_SIM* games = new Game_SIM[N];
 
@@ -142,11 +135,14 @@ int main()
 			//Update
 			games[i].update();
 
-			turn_direction = getTurnDirectionBasedOnFood(games[i].getCurrentFoodPosition(), games[i].getCurrentHeadPosition(), games[i].getCurrentDirection());
+			//turn_direction = getTurnDirectionBasedOnFood(games[i].getCurrentFoodPosition(), games[i].snake.getCurrentHeadPosition(), games[i].getCurrentDirection());
+			turn_direction = getTurnDirectionRandom();
 			games[i].turn(turn_direction);
+			//std::cout << turn_direction;
 		}
 
 		score = games[i].getScore();
+		//std::cout << score;
 
 		if (score > high_score)
 		{
@@ -156,7 +152,6 @@ int main()
 			high_score = score;
 			moved_directions = games[i].getMovedDirections();
 			food_pos = games[i].getFoodPositions();
-
 			
 			std::cout << "NEW HIGH SCORE BY GAME #"<< i<< ": " << score << std::endl;
 
@@ -180,7 +175,7 @@ int main()
 
 	//Init SIM Games
 	int turn_direction, high_score, score;
-	std::vector<directions> moved_directions;
+	std::vector<absolute_directions> moved_directions;
 	std::vector<sf::Vector2i> head_pos, food_pos;
 
 	const char* direction_names[4] = { "UP", "RIGHT", "DOWN", "LEFT" };
@@ -249,7 +244,7 @@ int main()
 
 //Init SIM Games
 int turn_direction, high_score, score;
-std::vector<directions> moved_directions;
+std::vector<absolute_directions> moved_directions;
 std::vector<sf::Vector2i> head_pos, food_pos;
 
 const char* direction_names[4] = { "UP", "RIGHT", "DOWN", "LEFT" };
