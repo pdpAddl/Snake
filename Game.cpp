@@ -66,7 +66,6 @@ void Game::move()
 	if ((head_pos.x >= this->map_size.x) || (head_pos.x < 0) || (head_pos.y >= this->map_size.y) || (head_pos.y < 0))
 	{
 		this->game_state = ENDED;
-		//std::cout << "COLLISION with wall!" << std::endl;
 	}
 
 	bool eating = false;
@@ -185,10 +184,11 @@ Game_SIM::Game_SIM(int tiles_x, int tiles_y)
 	:Game(tiles_x, tiles_y)
 {
 
+}
+
 const int Game_SIM::getScore()
 {
 	int score = this->snake.getLength() - this->snake.getStartLength();
-	//if(score) std::cout << score << " with " << this->moves << " moves." <<std::endl;
 	return score;
 }
 
