@@ -207,7 +207,7 @@ Game_GUI::Game_GUI(int p_tiles_x, int p_tiles_y, float p_speed)
 
 Game_GUI::~Game_GUI()
 {
-	//delete this->window;
+	delete this->window;
 }
 
 bool Game_GUI::clockReady()
