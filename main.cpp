@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define N 100
+#define N 10000
 #define SIZE_X 20
 #define SIZE_Y 20
 #define GAMESPEED 1
